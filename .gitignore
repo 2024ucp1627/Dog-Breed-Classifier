@@ -11,3 +11,5 @@ node_modules/
 
 # Environment variables
 .env
+backend/.DS_Store
+**/.DS_Store
