@@ -2,11 +2,46 @@ import { useState } from 'react'
 
 function App() {
   const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedFile, setSelectedFile] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [predictions, setPredictions] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const handleFile = (file) => {
     if (file && file.type.startsWith('image/')) {
       setSelectedImage(URL.createObjectURL(file))
+      setSelectedFile(file)
+      setPredictions(null)
+      setError(null)
+      sendToBackend(file)
+    }
+  }
+
+  const sendToBackend = async (file) => {
+    setIsLoading(true)
+    setError(null)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`)
+      }
+
+      const data = await response.json()
+      setPredictions(data.predictions)
+    } catch (err) {
+      setError('Could not reach the backend. Is the server running?')
+      console.error(err)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -61,9 +96,29 @@ function App() {
         )}
       </label>
 
-      {selectedImage && (
-        <div className="w-96 bg-gray-800 rounded-xl p-4 text-white">
-          <p className="text-sm text-gray-400">Prediction results will appear here</p>
+      {isLoading && (
+        <p className="text-blue-400 animate-pulse">Analyzing image...</p>
+      )}
+
+      {error && (
+        <div className="w-96 bg-red-900/50 border border-red-700 rounded-xl p-4 text-red-200 text-sm">
+          {error}
+        </div>
+      )}
+
+      {predictions && (
+        <div className="w-96 bg-gray-800 rounded-xl p-4 text-white space-y-2">
+          <p className="text-sm text-gray-400 mb-2">Predictions</p>
+          {predictions.map((pred, i) => (
+            <div key={i} className="flex justify-between items-center">
+              <span className={i === 0 ? 'font-semibold' : 'text-gray-300'}>
+                {pred.breed.replace(/_/g, ' ')}
+              </span>
+              <span className={i === 0 ? 'text-green-400 font-semibold' : 'text-gray-400'}>
+                {pred.confidence.toFixed(1)}%
+              </span>
+            </div>
+          ))}
         </div>
       )}
     </div>
