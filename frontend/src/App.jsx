@@ -7,6 +7,10 @@ function App() {
   const [predictions, setPredictions] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem('predictionHistory')
+    return saved ? JSON.parse(saved) : []
+  })
 
   const handleFile = (file) => {
     if (file && file.type.startsWith('image/')) {
@@ -37,6 +41,20 @@ function App() {
 
       const data = await response.json()
       setPredictions(data.predictions)
+
+      const newEntry = {
+        id: Date.now(),
+        image: URL.createObjectURL(file),
+        topBreed: data.predictions[0].breed.replace(/_/g, ' '),
+        confidence: data.predictions[0].confidence,
+        timestamp: new Date().toLocaleString(),
+      }
+
+      setHistory((prev) => {
+        const updated = [newEntry, ...prev].slice(0, 10) // keep last 10
+        localStorage.setItem('predictionHistory', JSON.stringify(updated))
+        return updated
+      })
     } catch (err) {
       setError('Could not reach the backend. Is the server running?')
       console.error(err)
@@ -119,6 +137,30 @@ function App() {
               </span>
             </div>
           ))}
+        </div>
+      )}
+
+      {history.length > 0 && (
+        <div className="w-96 bg-gray-800 rounded-xl p-4 text-white">
+          <p className="text-sm text-gray-400 mb-3">Recent Predictions</p>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {history.map((entry) => (
+              <div key={entry.id} className="flex items-center gap-3 bg-gray-900/50 rounded-lg p-2">
+                <img
+                  src={entry.image}
+                  alt={entry.topBreed}
+                  className="w-10 h-10 object-cover rounded-md"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm truncate">{entry.topBreed}</p>
+                  <p className="text-xs text-gray-500">{entry.timestamp}</p>
+                </div>
+                <span className="text-xs text-green-400 font-medium">
+                  {entry.confidence.toFixed(1)}%
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
