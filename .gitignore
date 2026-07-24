@@ -15,3 +15,10 @@ backend/.DS_Store
 **/.DS_Store
 __pycache__/
 *.pyc
+
+# Dataset (too large for git, downloaded via data/split_dataset.py)
+backend/data/Images/
+backend/data/train/
+backend/data/val/
+backend/data/test/
+backend/data/images.tar
