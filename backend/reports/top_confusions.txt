@@ -1,0 +1,22 @@
+Top 20 most-confused breed pairs (true -> predicted):
+
+Siberian husky -> Eskimo dog: 14 times
+Walker hound -> beagle: 8 times
+miniature poodle -> toy poodle: 7 times
+collie -> Shetland sheepdog: 7 times
+EntleBucher -> Greater Swiss Mountain dog: 7 times
+English foxhound -> Walker hound: 7 times
+Cardigan -> Pembroke: 7 times
+Boston bull -> French bulldog: 7 times
+miniature poodle -> standard poodle: 6 times
+collie -> Border collie: 6 times
+Scottish deerhound -> Irish wolfhound: 6 times
+Lhasa -> Shih-Tzu: 6 times
+English foxhound -> beagle: 6 times
+vizsla -> Rhodesian ridgeback: 5 times
+Tibetan terrier -> Lhasa: 5 times
+Shih-Tzu -> Lhasa: 5 times
+Doberman -> miniature pinscher: 5 times
+American Staffordshire terrier -> Staffordshire bullterrier: 5 times
+wire-haired fox terrier -> Lakeland terrier: 4 times
+standard schnauzer -> miniature schnauzer: 4 times
