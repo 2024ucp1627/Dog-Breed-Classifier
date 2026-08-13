@@ -22,3 +22,6 @@ backend/data/train/
 backend/data/val/
 backend/data/test/
 backend/data/images.tar
+
+# Training-only virtual environment (contains full TensorFlow, too large for git)
+backend/venv-train/
